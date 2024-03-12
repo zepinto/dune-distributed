@@ -113,6 +113,7 @@ public:
         break;
       case 'S':
         data.output = true;
+        /* Falls through */
       default:
         next = &Mock::initial;
     }
@@ -161,5 +162,5 @@ main(int argc, char** argv)
   {
     test.boolean(testcases[i].string, o.count(testcases[i].string) == testcases[i].count);
   }
-  return 0;
+  return test.getReturnValue();
 }
