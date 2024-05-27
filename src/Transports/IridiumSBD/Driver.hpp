@@ -488,6 +488,9 @@ namespace Transports
         uint8_t csum[2] = {0};
         computeChecksum(data, data_size, csum);
         sendRaw(csum, sizeof(csum));
+        
+        if (m_use_9523)
+          sendRaw((uint8_t*)getLineTermOut().c_str(), getLineTermOut().size());
 
         // Read response.
         std::string line = readLine();
