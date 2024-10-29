@@ -49,6 +49,7 @@ namespace Transports
       {
         // Do something with the frame.
         m_task->inf("Sending frame");
+        (void)frame;
       }
 
       void
@@ -56,6 +57,14 @@ namespace Transports
       {
         // Do something with the range.
         m_task->inf("Sending range");
+        (void)range;
+      }
+
+      void
+      poll(void)
+      {
+        // Do something.
+        m_task->inf("Polling");
       }
 
 

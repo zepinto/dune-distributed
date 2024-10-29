@@ -234,6 +234,35 @@ namespace Transports
           }
         }
       }
+
+      void
+      onDisconnect() override
+      {
+        Memory::clear(m_driver);
+        Memory::clear(m_io);
+      }
+
+      bool
+      onReadData() override
+      {
+        if (m_driver != nullptr)
+          m_driver->poll();
+        
+        return true;
+      }
+
+      void
+      onInitializeDevice() override
+      {
+        if (m_driver != nullptr)
+        {
+          m_driver->setNodeMap(m_node_map);
+          m_driver->setSoundSpeed(m_sound_speed);
+        }
+      }
+
     };
   }
 }
+
+DUNE_TASK
