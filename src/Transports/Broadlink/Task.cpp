@@ -181,7 +181,7 @@ namespace Transports
 
         if ( m_driver->isBusy() )
         {
-          spew( "modem is busy" );
+          debug( "modem is busy" );
           sendTxStatus( *msg, IMC::UamTxStatus::UTS_BUSY, DTR( "modem is busy" ) );
           return;
         }
@@ -203,7 +203,7 @@ namespace Transports
 
         if ( m_driver->isBusy() )
         {
-          spew( "modem is busy" );
+          debug( "modem is busy" );
           sendTxStatus( *msg, IMC::UamTxStatus::UTS_BUSY, DTR( "modem is busy" ) );
           return;
         }
@@ -230,6 +230,7 @@ namespace Transports
           {
             Memory::clear(m_io);
             err("failed to connect: %s", e.what());
+            Delay::wait(5.0);
             return false;
           }
         }
@@ -245,19 +246,30 @@ namespace Transports
       bool
       onReadData() override
       {
+        debug("onReadData");
         if (m_driver != nullptr)
-          m_driver->poll();
-        
+        {          
+          try 
+          {
+            std::string txt = m_driver->poll(1.0);
+            inf("Received: %s", txt.c_str());          
+          }
+          catch (...)
+          {
+            debug("No data received");
+          }
+        }
         return true;
       }
 
       void
       onInitializeDevice() override
       {
+        debug("onInitializeDevice");
         if (m_driver != nullptr)
         {
           m_driver->setNodeMap(m_node_map);
-          m_driver->setSoundSpeed(m_sound_speed);
+          m_driver->initModem();          
         }
       }
 
